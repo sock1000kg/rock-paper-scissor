@@ -41,7 +41,7 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
   const mySide = (Object.keys(state.players ?? {}) as PlayerSide[]).find(
     (side) => state.players[side]?.id === player.id,
   ) ?? null;
-  const isHost = mySide === 'X';
+  const isHost = Boolean(state.hostId) && state.hostId === player.id;
   const roomFull = Boolean(state.players?.X && state.players?.O);
 
   useEffect(() => {
@@ -149,7 +149,7 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
         draft.winReason = null;
       });
     }
-    window.setTimeout(leaveRoomUrl, 450);
+    window.setTimeout(leaveRoomUrl, 800);
   };
 
   const copyLink = async () => {
