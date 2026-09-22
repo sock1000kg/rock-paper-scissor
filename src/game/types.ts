@@ -2,11 +2,14 @@ export type PieceType = 'ROCK' | 'PAPER' | 'SCISSORS';
 export type PlayerSide = 'X' | 'O';
 export type GameStatus = 'WAITING' | 'PLAYING' | 'FINISHED';
 export type WinReason = 'ELIMINATED_ALL_PIECES' | 'REACHED_GOAL';
+export type MapId = 'default' | 'obstacles' | 'custom';
 
 export interface Position {
   col: number;
   row: number;
 }
+
+export type MapObstacle = Position;
 
 export interface Piece {
   id: string;
@@ -28,6 +31,8 @@ export interface SharedGameState {
   status: GameStatus;
   players: Partial<Record<PlayerSide, Player>>;
   pieces: Piece[];
+  obstacles: MapObstacle[];
+  mapId: MapId;
   turn: PlayerSide;
   winnerId: string | null;
   winReason: WinReason | null;
@@ -58,6 +63,8 @@ export const emptyGameState: SharedGameState = {
   status: 'WAITING',
   players: {},
   pieces: [],
+  obstacles: [],
+  mapId: 'default',
   turn: 'X',
   winnerId: null,
   winReason: null,

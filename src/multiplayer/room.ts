@@ -26,9 +26,16 @@ function navigateWithReload(url: URL): void {
   window.location.reload();
 }
 
-export function openRoom(roomId: string): void {
+export function openRoom(roomId: string, map?: string, layout?: string): void {
   const url = new URL(window.location.href);
   url.searchParams.set('exercise', 'ottv2');
+  if (map) {
+    url.searchParams.set('map', map);
+    if (layout) url.searchParams.set('layout', layout);
+  } else {
+    url.searchParams.delete('map');
+    url.searchParams.delete('layout');
+  }
   url.hash = roomId;
   navigateWithReload(url);
 }

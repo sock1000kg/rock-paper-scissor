@@ -44,6 +44,12 @@ describe('rules', () => {
     expect(getLegalMoves(state, 'x-rock')).toHaveLength(8);
   });
 
+  it('does not allow moving onto an obstacle', () => {
+    const state = createInitialGame('TEST', players, 'PLAYING', [fromSquare('e6')]);
+    state.pieces = [{ id: 'x-rock', owner: 'X', type: 'ROCK', position: fromSquare('e5') }];
+    expect(getLegalMoves(state, 'x-rock').map(toSquare)).not.toContain('e6');
+  });
+
   it('blocks same type and weaker attacks while allowing a winning capture', () => {
     const base = createInitialGame('TEST', players);
     base.pieces = [
