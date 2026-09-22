@@ -1,0 +1,42 @@
+/* Board buttons must not inherit the browser's raised-button formatting. */
+.cell {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  font: inherit;
+  line-height: 1;
+}
+
+.cell:focus { outline: none; }
+
+.cell:focus-visible {
+  outline: 3px solid #ffcf60;
+  outline-offset: -3px;
+}
+
+.piece {
+  font-style: normal;
+  pointer-events: none;
+  flex: 0 0 auto;
+}
+
+/* Explicit rows prevent CSS Grid from stretching the first row to its content. */
+.board {
+  grid-template-rows: repeat(var(--rows), minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
+  grid-auto-flow: row;
+  align-content: stretch;
+}
+
+/* All built-in battle maps are square (7×7 through 11×11). */
+#gameBoard {
+  aspect-ratio: 1 / 1;
+}
+
+.cell {
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
