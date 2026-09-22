@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { AppHeader } from './components/AppHeader';
 import { getRoomIdFromUrl } from './multiplayer/room';
 import { ClassicScreen } from './screens/ClassicScreen';
@@ -13,8 +14,21 @@ function getView(): View {
 }
 
 export default function App() {
-  const current = getView();
-  const roomId = getRoomIdFromUrl();
+  const [current, setCurrent] = useState(getView);
+  const [roomId, setRoomId] = useState(getRoomIdFromUrl);
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setCurrent(getView());
+      setRoomId(getRoomIdFromUrl());
+    };
+    window.addEventListener('hashchange', handleLocationChange);
+    window.addEventListener('popstate', handleLocationChange);
+    return () => {
+      window.removeEventListener('hashchange', handleLocationChange);
+      window.removeEventListener('popstate', handleLocationChange);
+    };
+  }, []);
 
   const navigate = (destination: View) => {
     const url = new URL(window.location.href);
