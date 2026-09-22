@@ -12,16 +12,30 @@ export function getRoomIdFromUrl(): string | null {
   return normalizeRoomId(window.location.hash);
 }
 
+function navigateWithReload(url: URL): void {
+  // playhtml only reconnects to the room encoded in the URL on a fresh page
+  // load; a same-document (hash-only) navigation leaves it connected to the
+  // previous room, so force a full reload whenever the hash actually changes.
+  // location.assign() with only the fragment differing does not update
+  // location.href synchronously in Chromium, so a reload() right after (or
+  // even deferred via setTimeout) can race it and reload the stale,
+  // pre-navigation URL. pushState() updates the URL synchronously, so use
+  // that to set the target URL before reloading.
+  if (url.toString() === window.location.href) return;
+  window.history.pushState(null, '', url.toString());
+  window.location.reload();
+}
+
 export function openRoom(roomId: string): void {
   const url = new URL(window.location.href);
   url.searchParams.set('exercise', 'ottv2');
   url.hash = roomId;
-  window.location.assign(url.toString());
+  navigateWithReload(url);
 }
 
 export function leaveRoomUrl(): void {
   const url = new URL(window.location.href);
   url.searchParams.set('exercise', 'ottv2');
   url.hash = '';
-  window.location.assign(url.toString());
+  navigateWithReload(url);
 }
