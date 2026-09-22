@@ -17,10 +17,10 @@ export function HomeScreen({ onChoose }: HomeScreenProps) {
           <div className="exercise-number">Bài 1</div>
           <div className="preview-hands" aria-hidden="true"><span>✊</span><span>✋</span><span>✌️</span></div>
           <div>
-            <h2>Kéo · Búa · Bao</h2>
-            <p>Chọn một nước, đấu với máy và chạm mốc 5 điểm trước.</p>
+            <h2>OTTv2 · Chơi tại chỗ</h2>
+            <p>Bàn cờ 9×9 cho hai người chơi thay phiên trên cùng thiết bị, không cần tạo phòng.</p>
           </div>
-          <button className="primary-button" onClick={() => onChoose('classic')}>Chơi bản cổ điển</button>
+          <button className="primary-button" onClick={() => onChoose('classic')}>Chơi tại chỗ</button>
         </article>
         <article className="exercise-item strategy-preview">
           <div className="exercise-number">Bài 2</div>

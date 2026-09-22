@@ -1,7 +1,7 @@
 import { AppHeader } from './components/AppHeader';
 import { getRoomIdFromUrl } from './multiplayer/room';
-import { ClassicScreen } from './screens/ClassicScreen';
 import { HomeScreen } from './screens/HomeScreen';
+import { LocalGameScreen } from './screens/LocalGameScreen';
 import { OnlineGameScreen } from './screens/OnlineGameScreen';
 import { RoomHomeScreen } from './screens/RoomHomeScreen';
 
@@ -28,7 +28,7 @@ export default function App() {
     <div className="app-shell">
       <AppHeader current={current} onNavigate={navigate} />
       {current === 'home' && <HomeScreen onChoose={navigate} />}
-      {current === 'classic' && <ClassicScreen />}
+      {current === 'classic' && <LocalGameScreen />}
       {current === 'ottv2' && (roomId ? <OnlineGameScreen roomId={roomId} /> : <RoomHomeScreen />)}
     </div>
   );
