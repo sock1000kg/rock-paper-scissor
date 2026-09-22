@@ -2,7 +2,7 @@
 
 Ứng dụng React gồm hai bài tập:
 
-1. **Kéo Búa Bao cổ điển** — người chơi đấu với máy, ai đạt 5 điểm trước sẽ thắng.
+1. **OTTv2 multiplayer** — hai người một máy.
 2. **OTTv2** — hai người chơi trong phòng riêng, điều khiển 9 quân trên bàn cờ 9×9 và đồng bộ bằng `playhtml`.
 
 ## Chạy local
