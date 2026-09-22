@@ -135,7 +135,7 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
       state.players,
       'PLAYING',
       state.obstacles?.length ? state.obstacles : preset.obstacles,
-      state.pieces?.length ? state.pieces : createInitialPieces(),
+      state.status === 'WAITING' && state.pieces?.length ? state.pieces : (customLayout?.pieces ?? createInitialPieces()),
       configuredMap,
       state.hostId,
     ));
