@@ -5,7 +5,8 @@ interface LocalPlayer {
   name: string;
 }
 
-const STORAGE_KEY = 'ottv2-local-player';
+const PLAYER_ID_KEY = 'ottv2-player-id';
+const PLAYER_NAME_KEY = 'ottv2-player-name';
 
 function createPlayer(): LocalPlayer {
   return {
@@ -16,19 +17,16 @@ function createPlayer(): LocalPlayer {
 
 export function useLocalPlayer() {
   const [player, setPlayer] = useState<LocalPlayer>(() => {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '') as LocalPlayer;
-    } catch {
-      const next = createPlayer();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      return next;
-    }
+    const storedId = sessionStorage.getItem(PLAYER_ID_KEY);
+    const nextId = storedId || createPlayer().id;
+    if (!storedId) sessionStorage.setItem(PLAYER_ID_KEY, nextId);
+    return { id: nextId, name: sessionStorage.getItem(PLAYER_NAME_KEY) ?? '' };
   });
 
   const updateName = (name: string) => {
     setPlayer((current) => {
       const next = { ...current, name };
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      sessionStorage.setItem(PLAYER_NAME_KEY, name);
       return next;
     });
   };

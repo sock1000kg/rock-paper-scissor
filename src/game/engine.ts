@@ -1,4 +1,4 @@
-import type { Piece, PieceType, PlayerSide, Position, SharedGameState } from './types';
+import type { MapId, Piece, PieceType, PlayerSide, Position, SharedGameState } from './types';
 
 const X_SETUP: Array<{ square: string; type: PieceType }> = [
   { square: 'a4', type: 'ROCK' },
@@ -53,13 +53,18 @@ export function createInitialGame(
   roomId: string,
   players: SharedGameState['players'],
   status: SharedGameState['status'] = 'PLAYING',
+  obstacles: SharedGameState['obstacles'] = [],
+  pieces: Piece[] = createInitialPieces(),
+  mapId: MapId = 'default',
 ): SharedGameState {
   return {
     schemaVersion: 1,
     roomId,
     status,
     players: clonePlayers(players),
-    pieces: createInitialPieces(),
+    pieces: pieces.map((piece) => ({ ...piece, position: { ...piece.position } })),
+    obstacles: obstacles.map((position) => ({ ...position })),
+    mapId,
     turn: 'X',
     winnerId: null,
     winReason: null,
@@ -89,6 +94,7 @@ export function getLegalMoves(state: SharedGameState, pieceId: string): Position
       if (rowDelta === 0 && colDelta === 0) continue;
       const target = { col: piece.position.col + colDelta, row: piece.position.row + rowDelta };
       if (!inBounds(target)) continue;
+      if ((state.obstacles ?? []).some((obstacle) => samePosition(obstacle, target))) continue;
       const occupant = state.pieces.find((candidate) => samePosition(candidate.position, target));
       if (!occupant) {
         moves.push(target);

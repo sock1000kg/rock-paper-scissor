@@ -8,8 +8,11 @@ interface BoardProps {
   mySide: PlayerSide | null;
   selectedPieceId: string | null;
   legalTargets: Position[];
+  obstacles?: Position[];
   onPieceSelect: (id: string) => void;
   onCellSelect: (position: Position) => void;
+  editorMode?: boolean;
+  onEditorCellSelect?: (position: Position) => void;
   disabled?: boolean;
 }
 
@@ -21,8 +24,11 @@ export function Board({
   mySide,
   selectedPieceId,
   legalTargets,
+  obstacles = [],
   onPieceSelect,
   onCellSelect,
+  editorMode = false,
+  onEditorCellSelect,
   disabled = false,
 }: BoardProps) {
   const cells: Position[] = [];
@@ -37,6 +43,7 @@ export function Board({
         {cells.map((position) => {
           const square = toSquare(position);
           const piece = pieces.find((candidate) => samePosition(candidate.position, position));
+          const obstacle = obstacles.some((candidate) => samePosition(candidate, position));
           const isLegal = legalTargets.some((candidate) => samePosition(candidate, position));
           const isRedGoal = square === 'a1';
           const isBlueGoal = square === 'i9';
@@ -50,14 +57,16 @@ export function Board({
             <div
               role="gridcell"
               key={square}
-              className={`board-cell${isLegal ? ' is-legal' : ''}${isRedGoal ? ' goal-red' : ''}${isBlueGoal ? ' goal-blue' : ''}`}
-              aria-label={`${square}${isLegal ? ', nước đi hợp lệ' : ''}${isRedGoal ? ', đích đỏ' : ''}${isBlueGoal ? ', đích xanh' : ''}`}
+              className={`board-cell${isLegal ? ' is-legal' : ''}${obstacle ? ' is-obstacle' : ''}${isRedGoal ? ' goal-red' : ''}${isBlueGoal ? ' goal-blue' : ''}`}
+              aria-label={`${square}${obstacle ? ', chướng ngại vật' : ''}${isLegal ? ', nước đi hợp lệ' : ''}${isRedGoal ? ', đích đỏ' : ''}${isBlueGoal ? ', đích xanh' : ''}`}
               data-square={square}
             >
+              {editorMode && <button className="editor-cell-target" type="button" onClick={() => onEditorCellSelect?.(position)} aria-label={`Chỉnh ô ${square}`} />}
+              {obstacle && <span className="obstacle-marker" aria-hidden="true">▦</span>}
               {(isRedGoal || isBlueGoal) && !piece && (
                 <span className="goal-flag" aria-hidden="true">⚑<small>{isRedGoal ? 'ĐỎ' : 'XANH'}</small></span>
               )}
-              {isLegal && !piece && (
+              {isLegal && !piece && !editorMode && (
                 <button className="cell-target" type="button" onClick={() => onCellSelect(position)} aria-label={`Đi đến ${square}`} />
               )}
               {piece && (

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import { usePageData, usePlayContext } from '@playhtml/react';
 import { Board } from '../components/Board';
 import { applyMove, createInitialGame, createInitialPieces, getLegalMoves } from '../game/engine';
+import { MAP_PRESETS, mapFromQuery, readCustomLayout } from '../game/maps';
 import {
   PIECE_LABELS,
   PIECE_SYMBOLS,
@@ -42,6 +43,11 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
   ) ?? null;
   const isHost = mySide === 'X';
   const roomFull = Boolean(state.players?.X && state.players?.O);
+  const searchParams = new URLSearchParams(window.location.search);
+  const hasHostMapConfig = searchParams.has('map');
+  const selectedMap = mapFromQuery(searchParams.get('map'));
+  const customLayout = selectedMap === 'custom' ? readCustomLayout() : null;
+  const configuredMap = state.mapId ?? selectedMap;
 
   useEffect(() => {
     if (isLoading || !player.name) return;
@@ -51,7 +57,14 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
     const register = () => {
       setState((draft) => {
         if (!draft.players) draft.players = {};
-        if (!draft.roomId) draft.roomId = roomId;
+        if (!draft.roomId) {
+          if (!hasHostMapConfig) return;
+          draft.roomId = roomId;
+          draft.mapId = selectedMap;
+          const preset = MAP_PRESETS.find((candidate) => candidate.id === selectedMap) ?? MAP_PRESETS[0];
+          draft.obstacles = customLayout?.obstacles ?? preset.obstacles;
+          draft.pieces = customLayout?.pieces ?? createInitialPieces();
+        }
         if (draft.players.X?.id === player.id || draft.players.O?.id === player.id) return;
         if (!draft.players.X || !draft.players.X.isConnected) {
           draft.players.X = { id: player.id, name: player.name, side: 'X', isConnected: true };
@@ -64,7 +77,7 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
     register();
     const retry = window.setInterval(register, 600);
     return () => window.clearInterval(retry);
-  }, [isLoading, player.id, player.name, roomId, setState, state.players]);
+  }, [hasHostMapConfig, isLoading, player.id, player.name, roomId, setState, state.players]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -111,7 +124,15 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
 
   const startGame = () => {
     if (!isHost || !roomFull) return;
-    setState(createInitialGame(roomId, state.players));
+    const preset = MAP_PRESETS.find((candidate) => candidate.id === configuredMap) ?? MAP_PRESETS[0];
+    setState(createInitialGame(
+      roomId,
+      state.players,
+      'PLAYING',
+      state.obstacles?.length ? state.obstacles : preset.obstacles,
+      state.pieces?.length ? state.pieces : createInitialPieces(),
+      configuredMap,
+    ));
     setMessage('Ván đấu bắt đầu. Đội Đỏ đi trước!');
   };
 
@@ -150,7 +171,10 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
   };
 
   const copyLink = async () => {
-    await navigator.clipboard.writeText(window.location.href);
+    const shareUrl = new URL(window.location.href);
+    shareUrl.searchParams.delete('map');
+    shareUrl.searchParams.delete('layout');
+    await navigator.clipboard.writeText(shareUrl.toString());
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1600);
   };
@@ -167,6 +191,16 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
             <button className="secondary-button" onClick={leaveRoomUrl}>Về sảnh</button>
           </div>
         )}
+      </main>
+    );
+  }
+
+  if (!state.roomId) {
+    return (
+      <main className="connection-screen">
+        <div className="loading-piece">✊</div>
+        <h1>Đang chờ chủ phòng…</h1>
+        <p>Map sẽ được đồng bộ từ người tạo phòng trước khi bạn tham gia.</p>
       </main>
     );
   }
@@ -212,6 +246,7 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
             <p className="context-line">Sảnh chờ · {roomId}</p>
             <h1>{roomFull ? 'Đủ đội hình.' : 'Đang chờ đối thủ…'}</h1>
             <p>{roomFull ? 'Host có thể bắt đầu. Đội Đỏ sẽ đi trước.' : 'Gửi link phòng cho người chơi thứ hai để bắt đầu.'}</p>
+            <p className="map-room-status">Bản đồ: <strong>{MAP_PRESETS.find((preset) => preset.id === configuredMap)?.name ?? 'Map mặc định'}</strong></p>
             <div className="seat-list">
               {(['X', 'O'] as PlayerSide[]).map((side) => (
                 <div className={`seat side-seat-${side.toLowerCase()}`} key={side}>
@@ -228,7 +263,7 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
             ) : <p className="form-error">Phòng đã đủ hai người. Bạn đang xem với vai trò khán giả.</p>}
           </div>
           <div className="lobby-board" aria-hidden="true">
-            <Board pieces={previewPieces} turn="X" mySide={null} selectedPieceId={null} legalTargets={[]} onPieceSelect={() => {}} onCellSelect={() => {}} disabled />
+            <Board pieces={previewPieces} obstacles={state.obstacles} turn="X" mySide={null} selectedPieceId={null} legalTargets={[]} onPieceSelect={() => {}} onCellSelect={() => {}} disabled />
           </div>
         </section>
       ) : (
@@ -245,6 +280,7 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
             </div>
             <Board
               pieces={state.pieces}
+              obstacles={state.obstacles}
               turn={state.turn}
               mySide={mySide}
               selectedPieceId={selectedId}
