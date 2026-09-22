@@ -32,6 +32,7 @@ export interface SharedGameState {
   winnerId: string | null;
   winReason: WinReason | null;
   revision: number;
+  hostId: string | null;
 }
 
 export const PIECE_LABELS: Record<PieceType, string> = {
@@ -61,4 +62,5 @@ export const emptyGameState: SharedGameState = {
   winnerId: null,
   winReason: null,
   revision: 0,
+  hostId: null,
 };

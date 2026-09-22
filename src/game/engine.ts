@@ -53,6 +53,7 @@ export function createInitialGame(
   roomId: string,
   players: SharedGameState['players'],
   status: SharedGameState['status'] = 'PLAYING',
+  hostId: string | null = null,
 ): SharedGameState {
   return {
     schemaVersion: 1,
@@ -64,6 +65,7 @@ export function createInitialGame(
     winnerId: null,
     winReason: null,
     revision: 0,
+    hostId,
   };
 }
 

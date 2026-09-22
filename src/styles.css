@@ -139,6 +139,8 @@ p { text-wrap: pretty; }
 .seat div { display: grid; gap: 2px; }
 .seat small { color: var(--muted); }
 .you-badge { margin-left: auto; border-radius: 999px; padding: var(--space-xs) var(--space-sm); background: var(--ink); color: white; font-size: 0.72rem; font-weight: 750; }
+.host-badge { margin-left: auto; border-radius: 999px; padding: var(--space-xs) var(--space-sm); background: var(--primary); color: white; font-size: 0.72rem; font-weight: 750; }
+.host-badge + .you-badge { margin-left: var(--space-xs); }
 .lobby-copy .primary-button { justify-self: start; }
 .lobby-board { opacity: 0.82; pointer-events: none; }
 

@@ -59,7 +59,10 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
           draft.players.X = { id: player.id, name: player.name, side: 'X', isConnected: true };
         } else if (!draft.players.O || !draft.players.O.isConnected) {
           draft.players.O = { id: player.id, name: player.name, side: 'O', isConnected: true };
+        } else {
+          return;
         }
+        if (!draft.hostId) draft.hostId = player.id;
       });
     };
 
@@ -113,7 +116,7 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
 
   const startGame = () => {
     if (!isHost || !roomFull) return;
-    setState(createInitialGame(roomId, state.players));
+    setState(createInitialGame(roomId, state.players, 'PLAYING', state.hostId));
     setMessage('Ván đấu bắt đầu. Đội Đỏ đi trước!');
   };
 
@@ -147,6 +150,10 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
         draft.pieces = [];
         draft.winnerId = null;
         draft.winReason = null;
+        if (draft.hostId === player.id) {
+          const remainingPlayer = Object.values(draft.players).find((candidate) => candidate);
+          draft.hostId = remainingPlayer ? remainingPlayer.id : null;
+        }
       });
     }
     window.setTimeout(leaveRoomUrl, 800);
@@ -220,6 +227,7 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
                 <div className={`seat side-seat-${side.toLowerCase()}`} key={side}>
                   <span className="seat-token">{side === 'X' ? '✊' : '✋'}</span>
                   <div><small>{SIDE_NAMES[side]}</small><strong>{state.players?.[side]?.name ?? 'Đang chờ…'}</strong></div>
+                  {state.players?.[side]?.id === state.hostId && <span className="host-badge">Host</span>}
                   {state.players?.[side]?.id === player.id && <span className="you-badge">Bạn</span>}
                 </div>
               ))}
