@@ -36,4 +36,4 @@ Chi tiết kỹ thuật, phân công và tiêu chí test nằm trong [REQUIREMEN
 
 ## Deploy
 
-Link deploy: _cập nhật sau_.
+Link deploy: https://sock1000kg.github.io/rock-paper-scissor/
