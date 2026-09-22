@@ -1,23 +1,23 @@
 :root {
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: oklch(0.2 0.025 35.8);
-  background: oklch(1 0 0);
+  color: var(--ink);
+  background: var(--bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --bg: oklch(1 0 0);
-  --surface: oklch(0.97 0.006 36);
-  --surface-strong: oklch(0.935 0.012 36);
-  --ink: oklch(0.2 0.025 35.8);
-  --muted: oklch(0.46 0.028 35.8);
-  --line: oklch(0.86 0.015 36);
-  --primary: oklch(0.56 0.178 35.8);
-  --primary-dark: oklch(0.47 0.16 35.8);
-  --primary-pale: oklch(0.93 0.045 35.8);
-  --blue: oklch(0.52 0.16 250);
-  --blue-dark: oklch(0.4 0.13 250);
-  --blue-pale: oklch(0.93 0.035 250);
-  --success: oklch(0.55 0.14 150);
-  --danger: oklch(0.52 0.19 25);
+  --bg: oklch(0.20 0.01 75);
+  --surface: oklch(0.25 0.01 75);
+  --surface-strong: oklch(0.30 0.01 75);
+  --ink: oklch(0.90 0.01 75);
+  --muted: oklch(0.70 0.01 75);
+  --line: oklch(0.35 0.01 75);
+  --primary: oklch(0.60 0.12 35);
+  --primary-dark: oklch(0.50 0.1 35);
+  --primary-pale: oklch(0.28 0.06 35);
+  --blue: oklch(0.60 0.1 250);
+  --blue-dark: oklch(0.50 0.08 250);
+  --blue-pale: oklch(0.28 0.05 250);
+  --success: oklch(0.65 0.1 140);
+  --danger: oklch(0.60 0.15 25);
   --shadow-sm: 0 2px 6px oklch(0.2 0.025 35.8 / 0.1);
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;
@@ -53,11 +53,11 @@ p { text-wrap: pretty; }
   border-bottom: 1px solid var(--line);
 }
 .brand { display: flex; align-items: center; gap: var(--space-sm); border: 0; background: transparent; font-weight: 800; font-size: 1.1rem; cursor: pointer; min-height: 44px; }
-.brand-mark { display: grid; place-items: center; width: 30px; height: 30px; background: var(--primary); color: white; border-radius: 9px; }
+.brand-mark { display: grid; place-items: center; width: 30px; height: 30px; background: var(--primary); color: var(--bg); border-radius: 9px; }
 .app-header nav { display: flex; gap: var(--space-xs); }
 .app-header nav button { min-height: 44px; border: 0; background: transparent; padding: 0 var(--space-lg); border-radius: var(--radius-sm); color: var(--muted); cursor: pointer; font-weight: 650; }
 .app-header nav button:hover { background: var(--surface); color: var(--ink); }
-.app-header nav .nav-active { background: var(--ink); color: white; }
+.app-header nav .nav-active { background: var(--ink); color: var(--bg); }
 
 .primary-button, .secondary-button, .text-button {
   min-height: 46px;
@@ -67,7 +67,7 @@ p { text-wrap: pretty; }
   cursor: pointer;
   transition: transform 180ms cubic-bezier(.22, 1, .36, 1), background-color 180ms ease;
 }
-.primary-button { border: 0; background: var(--primary); color: white; }
+.primary-button { border: 0; background: var(--primary); color: var(--bg); }
 .primary-button:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-1px); }
 .secondary-button { border: 1px solid var(--line); background: var(--bg); color: var(--ink); }
 .secondary-button:hover:not(:disabled) { background: var(--surface); }
@@ -83,17 +83,17 @@ p { text-wrap: pretty; }
 .exercise-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-xl); }
 .exercise-item { min-height: 25rem; border-radius: var(--radius-lg); padding: var(--space-2xl); display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-xl); overflow: hidden; }
 .classic-preview { background: var(--primary-pale); }
-.strategy-preview { background: var(--ink); color: white; }
+.strategy-preview { background: var(--ink); color: black; }
 .exercise-number { font-weight: 800; font-size: 0.82rem; color: var(--muted); }
-.strategy-preview .exercise-number, .strategy-preview p { color: oklch(0.82 0.012 36); }
+.strategy-preview .exercise-number, .strategy-preview p { color: black; }
 .exercise-item h2 { font-size: 1.75rem; margin-bottom: var(--space-sm); }
 .exercise-item p { line-height: 1.55; color: var(--muted); max-width: 40ch; }
-.exercise-item.strategy-preview p { color: oklch(0.82 0.012 36); }
+.exercise-item.strategy-preview p { color: black; }
 .exercise-item button { margin-top: auto; }
 .preview-hands { display: flex; align-items: center; gap: var(--space-md); font-size: clamp(2.5rem, 6vw, 4.5rem); }
 .preview-hands span { display: grid; place-items: center; width: 1.35em; aspect-ratio: 1; border-radius: 50%; background: var(--bg); box-shadow: var(--shadow-sm); }
-.mini-board { width: 10rem; aspect-ratio: 1; display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid oklch(0.4 0.02 36); }
-.mini-board span { border: 1px solid oklch(0.34 0.02 36); }
+.mini-board { width: 10rem; aspect-ratio: 1; display: grid; grid-template-columns: repeat(5, 1fr); border: 1px solid var(--line); }
+.mini-board span { border: 1px solid var(--line); }
 .mini-board span:nth-child(1), .mini-board span:nth-child(2), .mini-board span:nth-child(6) { background: var(--primary); }
 .mini-board span:nth-child(20), .mini-board span:nth-child(24), .mini-board span:nth-child(25) { background: var(--blue); }
 
@@ -139,8 +139,8 @@ p { text-wrap: pretty; }
 .side-seat-o { box-shadow: inset 4px 0 0 var(--blue); }
 .seat div { display: grid; gap: 2px; }
 .seat small { color: var(--muted); }
-.you-badge { margin-left: auto; border-radius: 999px; padding: var(--space-xs) var(--space-sm); background: var(--ink); color: white; font-size: 0.72rem; font-weight: 750; }
-.host-badge { margin-left: auto; border-radius: 999px; padding: var(--space-xs) var(--space-sm); background: var(--primary); color: white; font-size: 0.72rem; font-weight: 750; }
+.you-badge { margin-left: auto; border-radius: 999px; padding: var(--space-xs) var(--space-sm); background: var(--ink); color: var(--bg); font-size: 0.72rem; font-weight: 750; }
+.host-badge { margin-left: auto; border-radius: 999px; padding: var(--space-xs) var(--space-sm); background: var(--primary); color: var(--bg); font-size: 0.72rem; font-weight: 750; }
 .host-badge + .you-badge { margin-left: var(--space-xs); }
 .lobby-copy .primary-button { justify-self: start; }
 .lobby-board { opacity: 0.82; pointer-events: none; }
@@ -154,10 +154,10 @@ p { text-wrap: pretty; }
 .board-scroll { width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; }
 .board-frame { width: min(100%, 48rem); min-width: 444px; margin-inline: auto; padding: 6px; background: var(--ink); border-radius: var(--radius-md); }
 .board-frame.is-static { min-width: 0; width: min(100%, 48rem); padding: var(--space-sm); }
-.board { display: grid; grid-template-columns: repeat(9, 1fr); border: 1px solid oklch(0.33 0.02 36); background: var(--bg); }
-.board-cell { position: relative; aspect-ratio: 1; min-width: 0; padding: 0; border: 0; border-right: 1px solid oklch(0.76 0.018 36); border-bottom: 1px solid oklch(0.76 0.018 36); background: oklch(0.985 0.004 36); display: grid; place-items: center; cursor: default; }
+.board { display: grid; grid-template-columns: repeat(9, 1fr); border: 1px solid var(--line); background: var(--bg); }
+.board-cell { position: relative; aspect-ratio: 1; min-width: 0; padding: 0; border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: oklch(0.18 0.01 75); display: grid; place-items: center; cursor: default; }
 .board-cell:nth-child(18n + 2), .board-cell:nth-child(18n + 4), .board-cell:nth-child(18n + 6), .board-cell:nth-child(18n + 8),
-.board-cell:nth-child(18n + 10), .board-cell:nth-child(18n + 12), .board-cell:nth-child(18n + 14), .board-cell:nth-child(18n + 16), .board-cell:nth-child(18n + 18) { background: oklch(0.94 0.01 36); }
+.board-cell:nth-child(18n + 10), .board-cell:nth-child(18n + 12), .board-cell:nth-child(18n + 14), .board-cell:nth-child(18n + 16), .board-cell:nth-child(18n + 18) { background: oklch(0.15 0.01 75); }
 .board-cell.goal-red { background: var(--primary-pale); box-shadow: inset 0 0 0 3px var(--primary); }
 .board-cell.goal-blue { background: var(--blue-pale); box-shadow: inset 0 0 0 3px var(--blue); }
 .board-cell.is-obstacle { background: radial-gradient(circle at 35% 28%, oklch(0.62 0.025 70) 0 10%, transparent 11%), linear-gradient(145deg, oklch(0.42 0.028 55), oklch(0.25 0.025 42)); color: oklch(0.9 0.02 75); box-shadow: inset 0 0 0 2px oklch(0.18 0.02 42 / 0.5), inset 0 -5px 0 oklch(0.15 0.02 42 / 0.45); }
