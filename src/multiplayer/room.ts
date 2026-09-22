@@ -16,9 +16,13 @@ function navigateWithReload(url: URL): void {
   // playhtml only reconnects to the room encoded in the URL on a fresh page
   // load; a same-document (hash-only) navigation leaves it connected to the
   // previous room, so force a full reload whenever the hash actually changes.
-  const isSameDocument = url.toString() === window.location.href;
-  window.location.assign(url.toString());
-  if (isSameDocument) return;
+  // location.assign() with only the fragment differing does not update
+  // location.href synchronously in Chromium, so a reload() right after (or
+  // even deferred via setTimeout) can race it and reload the stale,
+  // pre-navigation URL. pushState() updates the URL synchronously, so use
+  // that to set the target URL before reloading.
+  if (url.toString() === window.location.href) return;
+  window.history.pushState(null, '', url.toString());
   window.location.reload();
 }
 

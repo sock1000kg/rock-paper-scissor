@@ -36,6 +36,7 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
   const [copied, setCopied] = useState(false);
   const [connectionSlow, setConnectionSlow] = useState(false);
   const resultDialogRef = useRef<HTMLElement>(null);
+  const leavingRef = useRef(false);
 
   const mySide = (Object.keys(state.players ?? {}) as PlayerSide[]).find(
     (side) => state.players[side]?.id === player.id,
@@ -44,11 +45,12 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
   const roomFull = Boolean(state.players?.X && state.players?.O);
 
   useEffect(() => {
-    if (isLoading || !player.name) return;
+    if (isLoading || !player.name || leavingRef.current) return;
     const alreadyJoined = state.players?.X?.id === player.id || state.players?.O?.id === player.id;
     if (alreadyJoined) return;
 
     const register = () => {
+      if (leavingRef.current) return;
       setState((draft) => {
         if (!draft.players) draft.players = {};
         if (!draft.roomId) draft.roomId = roomId;
@@ -137,6 +139,7 @@ export function OnlineGameScreen({ roomId }: OnlineGameScreenProps) {
   };
 
   const leave = () => {
+    leavingRef.current = true;
     if (mySide) {
       setState((draft) => {
         if (draft.players?.[mySide]?.id === player.id) delete draft.players[mySide];
