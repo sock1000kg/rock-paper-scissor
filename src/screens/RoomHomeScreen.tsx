@@ -72,7 +72,10 @@ export function RoomHomeScreen() {
 
   const addPiece = () => {
     const typeCount = editorPieces.filter((piece) => piece.owner === newPieceSide && piece.type === newPieceType).length;
-    if (typeCount >= 3) return;
+    if (typeCount >= 4) {
+      window.alert('Tối đa 4 quân cùng loại cho mỗi bên.');
+      return;
+    }
     const occupied = new Set(editorPieces.map((piece) => `${piece.position.col}:${piece.position.row}`));
     const blocked = new Set(editorObstacles.map((obstacle) => `${obstacle.col}:${obstacle.row}`));
     for (let row = 0; row < 9; row += 1) {
